@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const path = require("path");
 
 const PORT = process.env.PORT || 9000;
 const app = express();
@@ -11,7 +12,7 @@ app.use(express.json());
 app.use(cors())
 
 mongoose.connect(
-    process.env.ATLAS_URI, {
+    process.env.MONGODB_URI, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 },

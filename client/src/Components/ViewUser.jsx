@@ -52,7 +52,6 @@ export default function AddUser() {
 
     useEffect(async () => {
         const res = await axios.get("http://localhost:9000/api/users");
-        console.log(res.data)
         setData(res.data)
     }, [])
 

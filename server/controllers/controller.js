@@ -1,31 +1,37 @@
 const bcrypt = require("bcryptjs");
+const fsExtra = require('fs-extra');
 const User = require("../models/User");
 
 const { registerValidation } = require("../validation");
 
 const Register = async (req, res) => {
-  const { error } = registerValidation(req.body);
+  const image = req.files.image[0];
+  const payload = { ...JSON.parse(req.body.data), image };
+
+  const { error } = registerValidation(payload);
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
 
-  const emailExists = await User.findOne({ email: req.body.email });
+  const emailExists = await User.findOne({ email: payload.email });
   if (emailExists) {
     return res.status(400).send("Email already exists in the database");
   }
 
   const hashedPassword = await bcrypt.hash(
-    req.body.password,
+    payload.password,
     await bcrypt.genSalt(10)
   );
   const user = new User({
-    name: req.body.name,
-    email: req.body.email,
+    name: payload.name,
+    email: payload.email,
     password: hashedPassword,
+    image: payload.image
   });
 
   try {
     await user.save();
+    fsExtra.emptyDirSync('upload'); //Clear Directory Content
     res.send("User added successfully!");
   } catch (err) {
     res.status(400).send(err);

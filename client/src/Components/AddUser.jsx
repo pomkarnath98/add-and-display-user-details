@@ -18,6 +18,7 @@ export default function AddUser() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [image, setImg] = useState({});
     const addUpdateUserAction = async (event) => {
         event.preventDefault();
         if (splitedLocation?.length > 1) {
@@ -29,17 +30,34 @@ export default function AddUser() {
                 alert(err?.response?.data || 'Something went wrong...');
             }
         } else {
-            const payload = { name, email, password };
             try {
-                const res = await axios.post("http://localhost:9000/api/register", payload);
+                const newFormData = new FormData();
+                newFormData.append('image', image);
+                newFormData.append('data', JSON.stringify({ name, email, password }));
+
+                const axiosOptions = {
+                    baseURL: "",
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                };
+                const apiCall = axios.create(axiosOptions)
+
+                const res = await apiCall.post("http://localhost:9000/api/register", newFormData);
                 alert(res.data || 'User added successfully!');
                 setName('');
                 setEmail('');
                 setPassword('');
+                setImg({});
             } catch (err) {
                 alert(err?.response?.data || 'Something went wrong...');
             }
         }
+    }
+
+    const handleFileUpload = event => {
+        const file = event.target.files[0];
+        setImg(file);
     }
 
     useEffect(async () => {
@@ -69,6 +87,10 @@ export default function AddUser() {
 
             <InputDiv>
                 {splitedLocation?.length <= 1 && <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Enter Password" />}
+            </InputDiv>
+
+            <InputDiv>
+                {splitedLocation?.length <= 1 && <input onChange={handleFileUpload} type="file" />}
             </InputDiv>
 
             <InputDiv>
