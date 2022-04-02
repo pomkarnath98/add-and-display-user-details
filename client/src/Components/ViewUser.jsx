@@ -62,7 +62,7 @@ export default function AddUser() {
                 <UserBox key={user._id}>
                     <div><b>Name:</b> {user.name}</div>
                     <div><b>Email:</b> {user.email}</div>
-                    <div><b>Date of Joining:</b> {user.email}</div>
+                    <div><b>Joined on:</b> {new Date(user.date).toUTCString()}</div>
                     <Flex>
                         <button onClick={() => editUser(user.email)}>EDIT</button>
                         <button onClick={() => removeUser(user._id)}>DELETE</button>
