@@ -26,6 +26,8 @@ export default function AddUser() {
             try {
                 const res = await axios.put(`http://localhost:9000/api/user/update/${email}`, payload);
                 alert(res.data || 'User updated successfully!');
+                setName('');
+                setEmail('');
             } catch (err) {
                 alert(err?.response?.data || 'Something went wrong...');
             }
@@ -49,6 +51,7 @@ export default function AddUser() {
                 setEmail('');
                 setPassword('');
                 setImg({});
+                document.getElementById('user-image').value = "";
             } catch (err) {
                 alert(err?.response?.data || 'Something went wrong...');
             }
@@ -90,7 +93,7 @@ export default function AddUser() {
             </InputDiv>
 
             <InputDiv>
-                {splitedLocation?.length <= 1 && <input onChange={handleFileUpload} type="file" />}
+                {splitedLocation?.length <= 1 && <input id="user-image" onChange={handleFileUpload} type="file" accept="image/*" />}
             </InputDiv>
 
             <InputDiv>
